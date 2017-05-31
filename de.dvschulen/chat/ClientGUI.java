@@ -286,12 +286,12 @@ public class ClientGUI extends JFrame implements Protokoll
 	private void erstelleRaum()
 	{
 		String s = raumTF.getText();
-		if (s.equals("") && pruefeVerbindung())
+		if (s.equals(""))
 
 		{
 			zeigeNachricht("Bitte Raumnamen angeben!");
 		}
-		else
+		else if (pruefeVerbindung())
 		{
 			aClient.erstelleRaum(s);
 		}

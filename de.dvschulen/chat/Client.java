@@ -177,7 +177,7 @@ public class Client extends Thread implements Protokoll
 	{
 		try
 		{
-			if (out != null)
+			if (out != null && aSocket.isConnected())
 			{
 				out.writeUTF(s);
 			}
