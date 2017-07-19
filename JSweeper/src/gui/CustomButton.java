@@ -13,9 +13,19 @@ public class CustomButton extends javax.swing.JButton
     private int umgebendeMinen = 0;
     private boolean aufgedeckt = false;
     
+    private static javax.swing.ImageIcon FLAG = new javax.swing.ImageIcon("flag.png");
+    private static javax.swing.ImageIcon QUESTION = new javax.swing.ImageIcon("question.png");
+    private static javax.swing.ImageIcon BOMB = new javax.swing.ImageIcon("bomb.png");
+    private static javax.swing.ImageIcon EXPLOSION = new javax.swing.ImageIcon("explosion.png");
+    private static javax.swing.ImageIcon CHECKED = new javax.swing.ImageIcon("checked.png");
+    
+    
+    
     public CustomButton (int reihe, int spalte)
     {
         this.setPreferredSize(new java.awt.Dimension(3,3));
+        setSize(new java.awt.Dimension(3,3));
+        setToolTipText("Hier könnte eine Mine sein?!");
         this.reihe = reihe;
         this.spalte = spalte;
         this.setVisible(true);
@@ -61,6 +71,20 @@ public class CustomButton extends javax.swing.JButton
         return aufgedeckt;
     }
     
+    public void markieren()
+    {
+        if (!istMarkiert)
+        {
+            setIcon(FLAG);
+            istMarkiert = true;
+        }
+        else
+        {
+            setIcon(null);
+            istMarkiert = false;
+        }
+    }
+    
     public void aufdecken()
     {
         if (!aufgedeckt)
@@ -82,10 +106,18 @@ public class CustomButton extends javax.swing.JButton
         }
     }
     
+    
+    public void lost()
+    {
+       setIcon(EXPLOSION);
+    }
+    
     public void beenden()
     {
-        if (istMine)
-            setText("*");
+        if (istMine && istMarkiert)
+            setIcon(CHECKED);
+        else if (istMine)
+            setIcon(BOMB);
         else
             setVisible(false);
     }

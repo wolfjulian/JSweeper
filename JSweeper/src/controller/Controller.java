@@ -20,6 +20,7 @@ public class Controller {
     private int reihen;
     private int spalten;
     private int minen;
+    private int markiert=0;
     private BoardListener bl;
     
     public Controller (jSweeper gui, int reihenAnzahl, int spaltenAnzahl, int minenAnzahl)
@@ -67,7 +68,7 @@ public class Controller {
             {
                 CustomButton customButton = new CustomButton(r,s);
                 spielfeld.add(customButton);
-                customButton.addActionListener(bl);
+                customButton.addMouseListener(bl);
             }
         }
         gui.zeigeBrett(reihen, spalten, spielfeld);
@@ -101,41 +102,96 @@ public class Controller {
         return (int) (0 + Math.round( Math.random() * (max -0) ));
     }
     
-    public class BoardListener implements ActionListener
+    public class BoardListener implements java.awt.event.MouseListener
     {
         @Override
-        public void actionPerformed(ActionEvent e)
+        public void mousePressed(java.awt.event.MouseEvent e)
         {
-            //CustomButton identifizieren
-            for (CustomButton c:spielfeld)
+            if (SwingUtilities.isLeftMouseButton(e))
             {
-                if (e.getSource() == c)
+                //CustomButton identifizieren
+                for (CustomButton c:spielfeld)
                 {
-                    int reihe = c.getReihe();
-                    int spalte = c.getSpalte();
-                    pruefeFeld(c, reihe, spalte);
-                    System.out.println(c.toString());
-                    return;
+                    if (e.getSource() == c)
+                    {
+                        int reihe = c.getReihe();
+                        int spalte = c.getSpalte();
+                        pruefeFeld(c, reihe, spalte);
+                        System.out.println(c.toString());
+                        return;
+                    }
                 }
             }
+            if (SwingUtilities.isRightMouseButton(e))
+            {
+                //CustomButton identifizieren
+                for (CustomButton c:spielfeld)
+                {
+                    if (e.getSource() == c)
+                    {
+                        int reihe = c.getReihe();
+                        int spalte = c.getSpalte();
+                        c.markieren();
+                        System.out.println(c.toString());
+                        return;
+                    }
+                }
+            }
+            pruefeGewinn();
         }
+    
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent e)
+        {}
         
+        @Override
+        public void mouseReleased(java.awt.event.MouseEvent e)
+        {}
+    
+        @Override
+        public void mouseEntered(java.awt.event.MouseEvent e)
+        {}
+    
+        @Override
+        public void mouseExited(java.awt.event.MouseEvent e)
+        {}
+    
         private void pruefeGewinn()
         {
             int gefundeneMinen = 0;
+            int aufgedeckteFelder = 0;
+            
+            
             for (CustomButton c:spielfeld)
             {
                 if (c.getMine() && (c.getIstMarkiert()))
                     gefundeneMinen++;
-                
+                if (c.getAufgedeckt())
+                {
+                    aufgedeckteFelder++;
+                }
             }
-            if (gefundeneMinen == minen)
+    
+            // Alle Minen wurden markiert
+            if (gefundeneMinen == minen && minen == markiert)
             {
-                aufdecken();
-                JOptionPane.showMessageDialog(null, "G E W O N N E N ! ! !");
+                gewonnen();
             }
+            
+            // Alle Felder ohne Minen wurden aufgedeckt
+            if (aufgedeckteFelder == (reihen * spalten - minen))
+            {
+            gewonnen();
+            }
+            
         }
-        
+    
+        private void gewonnen()
+        {
+            aufdecken();
+            javax.swing.JOptionPane.showMessageDialog(null, "G E W O N N E N ! ! !");
+        }
+    
         private void aufdecken()
         {
             for (CustomButton c:spielfeld)
@@ -170,9 +226,15 @@ public class Controller {
             }
             else
             {
+                for (CustomButton customButton: spielfeld)
+                {
+                    customButton.beenden();
+                }
+                c.lost();
                 gameOver();
             }
         }
+
     }
 }
 
