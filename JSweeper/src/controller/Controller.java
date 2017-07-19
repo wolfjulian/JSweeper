@@ -149,20 +149,27 @@ public class Controller {
             if (!c.getMine())
             {
                 c.aufdecken();
-                for (CustomButton nachbarfeld : spielfeld)
+                if (c.getUmgebendeMinen() == 0)
                 {
-                    int nR = nachbarfeld.getReihe();
-                    int nS = nachbarfeld.getSpalte();
-                    if (((nR == r - 1) && (nS == s)) || ((nR == r + 1) && (nS ==s)) || ((nS == s - 1) && (nR == r) || (nS == s + 1) && (nR == r)))
+                    for (CustomButton nachbarfeld : spielfeld)
                     {
-                        if (!nachbarfeld.getMine() && !nachbarfeld.getAufgedeckt() && nachbarfeld.getUmgebendeMinen() == 0)
+                        int nR = nachbarfeld.getReihe();
+                        int nS = nachbarfeld.getSpalte();
+                        if (((nR == r - 1) && (nS == s)) || ((nR == r + 1) && (nS == s)) || ((nS == s - 1) && (nR == r) || (nS == s + 1) && (nR == r)))
                         {
-                            pruefeFeld(nachbarfeld, nachbarfeld.getReihe(), nachbarfeld.getSpalte());
+                            if (!nachbarfeld.getMine() && !nachbarfeld.getAufgedeckt() && nachbarfeld.getUmgebendeMinen() == 0)
+                            {
+                                pruefeFeld(nachbarfeld, nachbarfeld.getReihe(), nachbarfeld.getSpalte());
+                            } else if (!nachbarfeld.getMine() && !nachbarfeld.getAufgedeckt())
+                            {
+                                nachbarfeld.aufdecken();
+                            }
                         }
                     }
                 }
             }
-            else {
+            else
+            {
                 gameOver();
             }
         }
