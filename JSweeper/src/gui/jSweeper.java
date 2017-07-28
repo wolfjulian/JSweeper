@@ -15,6 +15,7 @@ public class jSweeper
     private javax.swing.JTextField minenTF;
     private javax.swing.JPanel board;
     private Controller controller;
+    private static javax.swing.JFrame frame;
     
     
     public jSweeper()
@@ -24,6 +25,7 @@ public class jSweeper
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e)
             {
+                leereBoard();
                 erzeugeBoard();
             }
         });
@@ -55,7 +57,7 @@ public class jSweeper
     
     public static void main(String[] args)
     {
-        javax.swing.JFrame frame = new javax.swing.JFrame("jSweeper");
+        frame = new javax.swing.JFrame("jSweeper");
         frame.setContentPane(new jSweeper().jSweeperWindow);
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -74,6 +76,11 @@ public class jSweeper
             minen = Integer.valueOf(minenTF.getText());
             controller = new Controller(this,breite, hoehe,minen);
             disableTF();
+
+            frame.setPreferredSize(new java.awt.Dimension(1920,1080));
+            frame.pack();
+            frame.revalidate();
+            frame.repaint();
         }
         catch (Exception e)
         {
@@ -81,10 +88,22 @@ public class jSweeper
         }
     }
     
+    public void leereBoard()
+    {
+        board.removeAll();
+        controller = null;
+        frame.setPreferredSize(new java.awt.Dimension(693,60));
+        frame.pack();
+        frame.revalidate();
+        frame.repaint();
+        enableTF();
+    }
+    
     public void zeigeBrett(int reihen, int spalten, java.util.ArrayList<gui.CustomButton> spielfeld)
     {
         board.removeAll();
         board.setLayout(new java.awt.GridLayout(reihen, spalten, 0,0));
+        
         for (CustomButton c:spielfeld)
         {
             board.add(c);
@@ -96,12 +115,14 @@ public class jSweeper
         breiteTF.setEnabled(false);
         hoeheTF.setEnabled(false);
         minenTF.setEnabled(false);
+        start.setEnabled(false);
     }
     public void enableTF()
     {
         breiteTF.setEnabled(true);
         hoeheTF.setEnabled(true);
         minenTF.setEnabled(true);
+        start.setEnabled(true);
     }
     
 }

@@ -23,8 +23,10 @@ public class CustomButton extends javax.swing.JButton
     
     public CustomButton (int reihe, int spalte)
     {
-        this.setPreferredSize(new java.awt.Dimension(3,3));
+        setPreferredSize(new java.awt.Dimension(3,3));
         setSize(new java.awt.Dimension(3,3));
+        java.awt.Insets insets = new java.awt.Insets(0,0,0,0);
+        this.setMargin(insets);
         setToolTipText("Hier könnte eine Mine sein?!");
         this.reihe = reihe;
         this.spalte = spalte;
@@ -71,17 +73,19 @@ public class CustomButton extends javax.swing.JButton
         return aufgedeckt;
     }
     
-    public void markieren()
+    public boolean markieren()
     {
         if (!istMarkiert)
         {
             setIcon(FLAG);
             istMarkiert = true;
+            return true;
         }
         else
         {
             setIcon(null);
             istMarkiert = false;
+            return false;
         }
     }
     

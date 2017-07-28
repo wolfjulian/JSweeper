@@ -2,7 +2,6 @@ package controller;
 
 /**
  * Created by WolfJulian@DV-Schulen on 19.07.2017.
- *
  */
 
 import gui.CustomButton;
@@ -23,6 +22,15 @@ public class Controller {
     private int minen;
     private int markiert=0;
     private BoardListener bl;
+    
+    public void addMarkieren()
+    {
+        markiert++;
+    }
+    public void delMarkieren()
+    {
+        markiert--;
+    }
     
     public Controller (jSweeper gui, int reihenAnzahl, int spaltenAnzahl, int minenAnzahl)
     {
@@ -119,7 +127,7 @@ public class Controller {
                         int spalte = c.getSpalte();
                         pruefeFeld(c, reihe, spalte);
                         System.out.println(c.toString());
-                        return;
+                        break;
                     }
                 }
             }
@@ -132,9 +140,16 @@ public class Controller {
                     {
                         int reihe = c.getReihe();
                         int spalte = c.getSpalte();
-                        c.markieren();
+                        if (c.markieren())
+                        {
+                            addMarkieren();
+                        }
+                        else
+                        {
+                            delMarkieren();
+                        }
                         System.out.println(c.toString());
-                        return;
+                        break;
                     }
                 }
             }
@@ -166,7 +181,9 @@ public class Controller {
             for (CustomButton c:spielfeld)
             {
                 if (c.getMine() && (c.getIstMarkiert()))
+                {
                     gefundeneMinen++;
+                }
                 if (c.getAufgedeckt())
                 {
                     aufgedeckteFelder++;
@@ -174,7 +191,7 @@ public class Controller {
             }
     
             // Alle Minen wurden markiert
-            if (gefundeneMinen == minen && minen == markiert)
+            if ((gefundeneMinen == minen) && (minen == markiert))
             {
                 gewonnen();
             }
@@ -191,6 +208,8 @@ public class Controller {
         {
             aufdecken();
             javax.swing.JOptionPane.showMessageDialog(null, "G E W O N N E N ! ! !");
+            spielfeld.clear();
+            gui.leereBoard();
         }
     
         private void aufdecken()
